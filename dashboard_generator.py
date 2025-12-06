@@ -5,17 +5,56 @@ from datetime import datetime
 def generate_dashboard(invoices, aggregated_categories, ai_analysis):
     print("Generating Dashboard...")
     
-    # Sort invoices by date for the trend chart
+    # Sort invoices by date
     invoices.sort(key=lambda x: x.date if x.date else datetime.min.date())
     
-    # Prepare Category Chart data
+    # --- Prepare Category Chart data ---
     cat_labels = list(aggregated_categories.keys())
     cat_data = list(aggregated_categories.values())
     
-    # Prepare Trend Chart data
-    trend_labels = [str(inv.date) if inv.date else "Unknown" for inv in invoices]
-    trend_data = [inv.total_amount for inv in invoices]
+    # --- Prepare Trend Chart data (Monthly per Supermarket) ---
+    # Structure: { 'YYYY-MM': { 'Supermarket A': 123.45, 'Supermarket B': 67.89 } }
+    monthly_data = {}
+    supermarkets = set()
+
+    for inv in invoices:
+        if not inv.date:
+            continue
+        
+        month_key = inv.date.strftime('%Y-%m') # e.g., "2025-10"
+        sm = inv.supermarket if inv.supermarket else "Unknown"
+        supermarkets.add(sm)
+        
+        if month_key not in monthly_data:
+            monthly_data[month_key] = {}
+        
+        if sm not in monthly_data[month_key]:
+            monthly_data[month_key][sm] = 0.0
+        
+        monthly_data[month_key][sm] += inv.total_amount
+
+    # Sort months chronologically
+    sorted_months = sorted(monthly_data.keys())
+    sorted_supermarkets = sorted(list(supermarkets))
+
+    # Prepare datasets for Chart.js
+    datasets = []
+    # Distinct colors for supermarkets
+    colors = ['#36A2EB', '#FF6384', '#4BC0C0', '#FF9F40', '#9966FF', '#FFCD56', '#C9CBCF']
     
+    for i, sm in enumerate(sorted_supermarkets):
+        data_points = []
+        for month in sorted_months:
+            # Get total for this supermarket in this month, or 0 if no invoices
+            val = monthly_data[month].get(sm, 0.0)
+            data_points.append(val)
+        
+        datasets.append({
+            'label': sm,
+            'data': data_points,
+            'backgroundColor': colors[i % len(colors)]
+        })
+
     # Simple HTML Template
     html_content = f"""
     <!DOCTYPE html>
@@ -49,7 +88,7 @@ def generate_dashboard(invoices, aggregated_categories, ai_analysis):
             
             <!-- Trend Chart Section -->
             <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700">Spending Trend (Total per Invoice)</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700">Monthly Spending by Supermarket</h2>
                 <div class="relative h-64 md:h-96">
                      <canvas id="trendChart"></canvas>
                 </div>
@@ -79,19 +118,13 @@ def generate_dashboard(invoices, aggregated_categories, ai_analysis):
                 }}
             }});
             
-            // Trend Bar Chart
+            // Trend Bar Chart (Grouped)
             const ctxTrend = document.getElementById('trendChart').getContext('2d');
             new Chart(ctxTrend, {{
                 type: 'bar',
                 data: {{
-                    labels: {json.dumps(trend_labels)},
-                    datasets: [{{
-                        label: 'Invoice Total ($)',
-                        data: {json.dumps(trend_data)},
-                        backgroundColor: '#36A2EB',
-                        borderColor: '#2482C2',
-                        borderWidth: 1
-                    }}]
+                    labels: {json.dumps(sorted_months)},
+                    datasets: {json.dumps(datasets)}
                 }},
                 options: {{
                     responsive: true,
@@ -101,13 +134,29 @@ def generate_dashboard(invoices, aggregated_categories, ai_analysis):
                             beginAtZero: true,
                             title: {{
                                 display: true,
-                                text: 'Amount ($)'
+                                text: 'Total Amount ($)'
                             }}
                         }},
                         x: {{
-                             title: {{
+                            title: {{
                                 display: true,
-                                text: 'Date'
+                                text: 'Month'
+                            }}
+                        }}
+                    }},
+                    plugins: {{
+                        tooltip: {{
+                            callbacks: {{
+                                label: function(context) {{
+                                    let label = context.dataset.label || '';
+                                    if (label) {{
+                                        label += ': ';
+                                    }}
+                                    if (context.parsed.y !== null) {{
+                                        label += new Intl.NumberFormat('en-US', {{ style: 'currency', currency: 'USD' }}).format(context.parsed.y);
+                                    }}
+                                    return label;
+                                }}
                             }}
                         }}
                     }}
