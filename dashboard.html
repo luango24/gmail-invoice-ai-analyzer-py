@@ -1,0 +1,100 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invoice Expense Dashboard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Expense Analysis Dashboard</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Category Chart Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-700">Spending by Category</h2>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                
+                <!-- AI Summary Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6 overflow-y-auto" style="max-height: 500px;">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-700">AI Executive Summary</h2>
+                    <div class="prose max-w-none text-gray-600">
+                        **Executive Dashboard Summary**<br>==============================<br><br>### Overview<br><br>Our analysis of the aggregated expense data reveals that our household has a relatively balanced spending pattern, with some categories standing out for their affordability and others requiring more attention.<br><br>### Key Takeaways<br><br>* Total Spending: $438.20<br>* Highest Categories:<br> + Dry Food (77% of total spend): $325.58<br> + Dairy (29%): $127.92<br>* Lowest Categories:<br> + Sauces (0.1%): $4.49<br> + Meat (0.05%): $2.17<br><br>### Recommendations for Optimization<br>=====================================<br><br>We have identified the following strategic recommendations to optimize our budget:<br><br>### 1. **Optimize Dry Food Spend**<br><br>* Review and adjust dry food purchases to reduce waste and explore more affordable options.<br>* Consider shopping at discount stores or using cashback apps.<br><br>### 2. **Reduce Dairy Spend**<br><br>* Evaluate dairy consumption patterns and aim to reduce overall spend by:<br> + Limiting or avoiding high-cost dairy products<br> + Exploring alternative sources of calcium and protein (e.g., plant-based milk, beans)<br><br>### 3. **Increase Savings on Low-Priority Categories**<br><br>* Allocate surplus funds from low-priority categories (e.g., Sauces, Meat) to more essential areas.<br>* Consider implementing a "50/30/20" budgeting rule: 50% for necessities, 30% for discretionary spending, and 20% for saving and debt repayment.<br><br>These recommendations will help us optimize our budget, reduce waste, and make the most of our hard-earned dollars.<br><br> 
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trend Chart Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-700">Spending Trend (Total per Invoice)</h2>
+                <div class="relative h-64 md:h-96">
+                     <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Category Pie Chart
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Drinks", "Dry Food", "Vegetables", "Proteins", "Dairy", "Canned Goods", "Fruits", "Other", "Hygiene", "Cleaning Supplies", "Snacks", "Cereals", "Bakery", "Meat", "Sauces", "Pet Supplies", "Baby"],
+                    datasets: [{
+                        data: [114.04999999999995, 325.58, 25.230000000000004, 250.0299999999999, 127.92, 109.83999999999999, 14.120000000000001, 67.91, 35.93000000000001, 36.32, 5.78, 7.5600000000000005, 3.45, 2.17, 4.49, 6.28, 3.92],
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', 
+                            '#E7E9ED', '#76A346', '#FDB45C', '#949FB1', '#4D5360', '#B4F8C8', '#FFAEB9'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            // Trend Bar Chart
+            const ctxTrend = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctxTrend, {
+                type: 'bar',
+                data: {
+                    labels: ["2025-10-03", "2025-10-04", "2025-10-06", "2025-10-10", "2025-10-11", "2025-10-13", "2025-10-15", "2025-10-17", "2025-10-19", "2025-10-19", "2025-10-25", "2025-10-26", "2025-10-29", "2025-10-31", "2025-11-02", "2025-11-05", "2025-11-07", "2025-11-12", "2025-11-15", "2025-11-21", "2025-11-22", "2025-11-26", "2025-11-28", "2025-11-30", "2025-12-05", "2025-12-05"],
+                    datasets: [{
+                        label: 'Invoice Total ($)',
+                        data: [0.0, 34.44, 41.54, 0.0, 41.99, 5.97, 40.39, 0.0, 34.75, 4.5, 0.0, 2.13, 23.51, 0.0, 40.62, 4.48, 0.0, 23.51, 0.0, 65.57, 25.71, 29.58, 0.0, 8.45, 0.0, 11.06],
+                        backgroundColor: '#36A2EB',
+                        borderColor: '#2482C2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount ($)'
+                            }
+                        },
+                        x: {
+                             title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+    </html>
+    

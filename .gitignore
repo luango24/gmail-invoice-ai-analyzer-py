@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pdf
+token.json
+config.json
+credentials.json
+.antigravityignore

@@ -1,0 +1,7 @@
+{
+    "pdf_directory": "C:\\path\\to\\invoices",
+    "ollama_model": "llama3.2",
+    "SecretJsonFile": "C:\\path\\to\\credentials.json",
+    "DownloadInvoice": true,
+    "QueryString": "from:(Super 99) has:attachment"
+}
