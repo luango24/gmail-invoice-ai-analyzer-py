@@ -4,6 +4,12 @@ from models import InvoiceItem
 from ai_analyzer import categorize_item_with_ai
 
 def detect_supermarket(text):
+    # Try to detect via Emisor regex first (for generic/sample support)
+    match = re.search(r'Emisor:\s*(.*)', text, re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+        
+    # Fallback to keyword matching
     text_upper = text.upper()
     if "SUPER 99" in text_upper or "IMPORTADORA RICAMAR" in text_upper:
         return "Super 99"
