@@ -23,7 +23,7 @@
                 <div class="bg-white rounded-lg shadow-lg p-6 overflow-y-auto" style="max-height: 500px;">
                     <h2 class="text-2xl font-bold mb-4 text-gray-700">AI Executive Summary</h2>
                     <div class="prose max-w-none text-gray-600">
-                        Test AI Analysis 
+                        **Executive Dashboard Summary**<br>==========================<br><br>Based on the aggregated expense data, here is a high-level summary:<br><br>*   Total spending: $355.80<br>*   Overall expenditure trend seems stable<br>*   Categories with notable expenses:<br>    *   Proteins ($66.95)<br>    *   Dry Food ($108.09)<br>    *   Fruits ($38.48)<br><br>### Top 3 Cost-Contributing Categories<br><br>| Rank | Category          | Spending Amount |<br>|-----|-------------------|----------------|<br>| 1   | Proteins         | $66.95        |<br>| 2   | Dry Food          | $108.09       |<br>| 3   | Fruits            | $38.48        |<br><br>### Key Observations<br><br>*   High expense in Proteins and Dry Food categories<br>*   Moderate spending on Fruits category<br><br> 
                     </div>
                 </div>
             </div>
@@ -43,9 +43,9 @@
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ["Food", "Home"],
+                    labels: ["Proteins", "Dry Food", "Drinks", "Dairy", "Hygiene", "Fruits", "Vegetables", "Canned Goods", "Bakery"],
                     datasets: [{
-                        data: [500.0, 50.0],
+                        data: [66.949, 108.09400000000001, 20.432, 27.891, 21.628999999999998, 38.481, 14.732999999999999, 38.623, 18.958000000000002],
                         backgroundColor: [
                             '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', 
                             '#E7E9ED', '#76A346', '#FDB45C', '#949FB1', '#4D5360', '#B4F8C8', '#FFAEB9'
@@ -66,7 +66,7 @@
                 type: 'bar',
                 data: {
                     labels: ["2025-10", "2025-11"],
-                    datasets: [{"label": "Super A", "data": [150.0, 120.0], "backgroundColor": "#36A2EB"}, {"label": "Super B", "data": [200.0, 80.0], "backgroundColor": "#FF6384"}]
+                    datasets: [{"label": "La Gran Despensa", "data": [49.15, 98.38000000000001], "backgroundColor": "#36A2EB"}, {"label": "Super Alfa", "data": [11.68, 196.59], "backgroundColor": "#FF6384"}]
                 },
                 options: {
                     responsive: true,

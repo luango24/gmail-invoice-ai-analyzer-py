@@ -49,6 +49,30 @@ python main.py
 
 On the first run, it will open a browser window to authenticate with Google.
 
+## Testing with Sample Invoices
+
+If you don't have access to real Gmail invoices or want to test the tool, you can generate sample PDF invoices:
+
+1.  Run the generator script:
+    ```bash
+    python generate_sample_invoice.py
+    ```
+    This will create a `samplepdf/` directory containing 10 sample invoices (randomly generated for "La Gran Despensa" and "Super Alfa").
+
+2.  Update `config.json` to point to the sample directory and disable Gmail download:
+    ```json
+    {
+        "pdf_directory": "./samplepdf",
+        "DownloadInvoice": false,
+        ...
+    }
+    ```
+
+3.  Run the main script:
+    ```bash
+    python main.py
+    ```
+
 ## License
 
 MIT
